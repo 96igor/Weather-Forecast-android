@@ -1,11 +1,26 @@
 package com.yourname.weatherforecast;
 
+import com.yourname.weatherforecast.R;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MainActivity extends AppCompatActivity {
+
+    private static final String DEFAULT_CITY = "Kiev";  // City
+    private static final String API_KEY = "f6315e7a91792b4680f6f4acb0a45f99";  // API key
+    private EditText cityEditText;
+    private TextView weatherInfoTextView;
 
     Button btnChooseCity, btnToday, btnWeek, btnTwoWeeks;
 
@@ -19,13 +34,20 @@ public class MainActivity extends AppCompatActivity {
         btnWeek = findViewById(R.id.btnWeek);
         btnTwoWeeks = findViewById(R.id.btnTwoWeeks);
 
+        cityEditText = findViewById(R.id.cityEditText);
+        weatherInfoTextView = findViewById(R.id.weatherInfoTextView);
+
+        // Устанавливаем Киев как город по умолчанию
+        cityEditText.setText(DEFAULT_CITY);
+
         // Заглушки переходов
         btnChooseCity.setOnClickListener(view -> {
             // TODO: открыть экран выбора города
         });
 
         btnToday.setOnClickListener(view -> {
-            // TODO: открыть экран прогноза на сегодня
+            // Запрос погоды на сегодня
+            fetchWeather();
         });
 
         btnWeek.setOnClickListener(view -> {
@@ -34,6 +56,42 @@ public class MainActivity extends AppCompatActivity {
 
         btnTwoWeeks.setOnClickListener(view -> {
             // TODO: открыть экран прогноза на 14 дней
+        });
+    }
+
+    private void fetchWeather() {
+        String city = cityEditText.getText().toString();
+        if (city.isEmpty()) {
+            city = DEFAULT_CITY;  // Если город не введён, используем Киев
+        }
+
+        // Инициализация Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.openweathermap.org/data/2.5/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        WeatherService weatherService = retrofit.create(WeatherService.class);
+
+        // Выполнение запроса
+        Call<WeatherResponse> call = weatherService.getWeatherForCity(city, "metric", API_KEY);
+        call.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+                if (response.isSuccessful()) {
+                    WeatherResponse weatherResponse = response.body();
+                    String weatherInfo = "Weather in " + weatherResponse.getName() +
+                            ": " + weatherResponse.getMain().getTemp() + "°C";
+                    weatherInfoTextView.setText(weatherInfo);
+                } else {
+                    weatherInfoTextView.setText("Failed to get weather data");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WeatherResponse> call, Throwable t) {
+                weatherInfoTextView.setText("Error: " + t.getMessage());
+            }
         });
     }
 }

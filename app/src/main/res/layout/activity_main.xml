@@ -6,6 +6,15 @@
     android:padding="24dp"
     android:gravity="center">
 
+    <EditText
+        android:id="@+id/cityEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter city"
+        android:layout_marginBottom="16dp"
+        android:inputType="textPersonName"
+        android:padding="12dp"/>
+
     <Button
         android:id="@+id/btnChooseCity"
         android:layout_width="match_parent"
@@ -44,4 +53,14 @@
         android:backgroundTint="#2196F3"
         android:textColor="#FFFFFF"
         android:padding="16dp"/>
+
+    <!-- Добавляем TextView для отображения погоды -->
+    <TextView
+        android:id="@+id/weatherInfoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Weather information will appear here"
+        android:layout_marginTop="16dp"
+        android:textSize="18sp"
+        android:textColor="#000000"/>
 </LinearLayout>
