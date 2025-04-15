@@ -13,4 +13,12 @@ public interface WeatherService {
             @Query("units") String units,
             @Query("appid") String apiKey
     );
+
+    // Получение прогноза погоды на 7 дней для города (через старую версию API)
+    @GET("forecast")
+    Call<WeatherForecastResponse> getWeatherForecastForCity(
+            @Query("q") String city,
+            @Query("units") String units,
+            @Query("appid") String apiKey
+    );
 }

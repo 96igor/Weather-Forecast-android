@@ -57,9 +57,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Погода на неделю
         btnWeek.setOnClickListener(view -> {
-            // TODO: открыть экран прогноза на 7 дней
+            // Открываем экран погоды на неделю
+            Intent intent = new Intent(MainActivity.this, WeekWeatherActivity.class);
+            startActivity(intent);
         });
 
         // Погода на 2 недели
