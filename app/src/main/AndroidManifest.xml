@@ -29,6 +29,8 @@
         <!-- Новая активность для выбора города -->
         <activity android:name=".SelectCityActivity" />
 
+        <activity android:name=".TodayWeatherActivity" />
+
     </application>
 
 </manifest>

@@ -53,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Погода на сегодня
         btnToday.setOnClickListener(view -> {
-            fetchWeather();
+            Intent intent = new Intent(MainActivity.this, TodayWeatherActivity.class);
+            startActivity(intent);
         });
 
         // Погода на неделю
