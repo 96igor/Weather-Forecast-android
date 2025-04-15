@@ -1,6 +1,10 @@
 package com.yourname.weatherforecast;
 
+import com.yourname.weatherforecast.SelectCityActivity;
 import com.yourname.weatherforecast.R;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,8 +21,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String DEFAULT_CITY = "Kiev";  // City
-    private static final String API_KEY = "f6315e7a91792b4680f6f4acb0a45f99";  // API key
+    private static final String DEFAULT_CITY = "Kharkiv";  // Город по умолчанию
+    private static final String API_KEY = "f6315e7a91792b4680f6f4acb0a45f99";  // Ключ API
     private EditText cityEditText;
     private TextView weatherInfoTextView;
 
@@ -37,23 +41,27 @@ public class MainActivity extends AppCompatActivity {
         cityEditText = findViewById(R.id.cityEditText);
         weatherInfoTextView = findViewById(R.id.weatherInfoTextView);
 
-        // Устанавливаем Киев как город по умолчанию
-        cityEditText.setText(DEFAULT_CITY);
+        // Загружаем город из SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("weather_prefs", MODE_PRIVATE);
+        String savedCity = prefs.getString("city", DEFAULT_CITY);
+        cityEditText.setText(savedCity);
 
-        // Заглушки переходов
+        // Кнопка "Выбрать город"
         btnChooseCity.setOnClickListener(view -> {
-            // TODO: открыть экран выбора города
+            startActivity(new Intent(MainActivity.this, SelectCityActivity.class));
         });
 
+        // Погода на сегодня
         btnToday.setOnClickListener(view -> {
-            // Запрос погоды на сегодня
             fetchWeather();
         });
 
+        // Погода на неделю
         btnWeek.setOnClickListener(view -> {
             // TODO: открыть экран прогноза на 7 дней
         });
 
+        // Погода на 2 недели
         btnTwoWeeks.setOnClickListener(view -> {
             // TODO: открыть экран прогноза на 14 дней
         });
@@ -62,10 +70,9 @@ public class MainActivity extends AppCompatActivity {
     private void fetchWeather() {
         String city = cityEditText.getText().toString();
         if (city.isEmpty()) {
-            city = DEFAULT_CITY;  // Если город не введён, используем Киев
+            city = DEFAULT_CITY;
         }
 
-        // Инициализация Retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.openweathermap.org/data/2.5/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -73,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
         WeatherService weatherService = retrofit.create(WeatherService.class);
 
-        // Выполнение запроса
         Call<WeatherResponse> call = weatherService.getWeatherForCity(city, "metric", API_KEY);
         call.enqueue(new Callback<WeatherResponse>() {
             @Override
