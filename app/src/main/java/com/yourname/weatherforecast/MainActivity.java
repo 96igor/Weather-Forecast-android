@@ -63,9 +63,9 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Погода на 2 недели
-        btnTwoWeeks.setOnClickListener(view -> {
-            // TODO: открыть экран прогноза на 14 дней
+        btnTwoWeeks.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, TwoWeeksWeatherActivity.class);
+            startActivity(intent);
         });
     }
 

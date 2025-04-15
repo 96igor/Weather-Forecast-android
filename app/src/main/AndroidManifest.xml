@@ -33,6 +33,8 @@
 
         <activity android:name=".WeekWeatherActivity" />
 
+        <activity android:name=".TwoWeeksWeatherActivity" />
+
     </application>
 
 </manifest>

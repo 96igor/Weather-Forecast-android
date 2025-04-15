@@ -21,4 +21,13 @@ public interface WeatherService {
             @Query("units") String units,
             @Query("appid") String apiKey
     );
+
+    // Получение прогноза погоды по координатам (One Call API)
+    @GET("onecall")
+    Call<WeekWeatherResponse> getWeatherForWeek(
+            @Query("lat") double lat,
+            @Query("lon") double lon,
+            @Query("units") String units,
+            @Query("appid") String apiKey
+    );
 }
